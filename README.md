@@ -41,8 +41,8 @@ The plugin turns Haravan order data into sales reports, weekly comparisons, dail
 | `plugin.json`, `mcp.json` | [Agent Plugins](https://agent-plugins.org) manifest (incl. OpenAI review metadata) |
 | `.claude-plugin/` | Claude Code plugin + marketplace |
 | `.codex-plugin/`, `.agents/plugins/` | OpenAI Codex plugin + marketplace |
-| `.cursor-plugin/` | Cursor plugin, marketplace, MCP config |
-| `.mcp.json` | MCP config for Claude Code, Codex, Copilot |
+| `.cursor-plugin/` | Cursor plugin + marketplace |
+| `.mcp.json` | MCP config for Claude Code, Codex, Cursor, Copilot |
 | `gemini-extension.json` | Gemini CLI extension |
 | `skills/` | Agent skills shared by all clients |
 | `assets/` | Logos |

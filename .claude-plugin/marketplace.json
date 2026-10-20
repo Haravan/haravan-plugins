@@ -11,7 +11,7 @@
       "name": "haravan",
       "source": "./",
       "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
-      "version": "0.1.11",
+      "version": "1.0.0",
       "author": {
         "name": "Haravan"
       },

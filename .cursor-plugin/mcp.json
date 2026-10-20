@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "haravan": {
-      "type": "http",
-      "url": "https://mcp-plugins.haravan.app/mcp"
-    }
-  }
-}

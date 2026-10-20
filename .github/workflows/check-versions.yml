@@ -1,0 +1,17 @@
+name: check-versions
+on: [push, pull_request]
+jobs:
+  versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: All manifests share one version
+        run: |
+          v=$(jq -r .version plugin.json)
+          for f in .claude-plugin/plugin.json .codex-plugin/plugin.json .cursor-plugin/plugin.json gemini-extension.json; do
+            [ "$(jq -r .version "$f")" = "$v" ] || { echo "$f != $v"; exit 1; }
+          done
+          for f in .claude-plugin/marketplace.json .cursor-plugin/marketplace.json; do
+            [ "$(jq -r '.plugins[0].version' "$f")" = "$v" ] || { echo "$f != $v"; exit 1; }
+          done
+          grep -q "^## $v$" CHANGELOG.md || { echo "CHANGELOG.md missing $v"; exit 1; }
