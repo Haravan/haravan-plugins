@@ -1,0 +1,91 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "haravan",
+  "version": "0.1.11",
+  "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Haravan",
+        "shortDescription": "Order insights from Haravan",
+        "longDescription": "Haravan for ChatGPT helps authorized merchants understand order performance using read-only data from their connected shop. Ask for a weekly sales overview, compare this week with the previous week, see daily order counts and gross order value, compare results by sales channel, review payment and fulfillment status, or find orders created yesterday that are still unfulfilled. Haravan retrieves supported order data from your connected shop and summarizes the fields returned by its API. Reports state the requested date range and calculation basis, and are limited by the shop's permissions and available data. Gross order value uses returned order totals and is not net revenue. The plugin currently reads order data only; it does not create or change orders.",
+        "developerName": "Haravan",
+        "category": "Business & Operations",
+        "capabilities": [
+          "Read connected order data",
+          "Summarize order performance and fulfillment"
+        ],
+        "websiteURL": "https://www.haravan.com/",
+        "supportURL": "https://support.haravan.com/",
+        "privacyPolicyURL": "https://www.haravan.com/pages/policy",
+        "termsOfServiceURL": "https://www.haravan.com/pages/quy-dinh",
+        "defaultPrompt": [
+          "Compare this week with last week: order count, gross order value, and average order value.",
+          "For yesterday, list every order still unfulfilled and give me the count.",
+          "For the past week, compare order count and gross order value by sales channel."
+        ],
+        "logo": "./assets/logo_haravan.svg",
+        "composerIcon": "./assets/logo_haravan.svg"
+      },
+      "review": {
+        "commerce": true,
+        "commerce_description": "This plugin is for merchants managing their own Haravan shops. In its current release, it only reads order data through GET requests. It does not create, update, cancel, close, confirm, refund, or otherwise change orders.",
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Create a natural-language weekly sales overview from order data, including order count, gross order value, and average order value.",
+              "prompt": "Prepare a sales report for the past week: number of orders, total order value, average order value, and how it compares with the previous week.",
+              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
+              "expected_behavior": "The assistant resolves the past-week and previous-week date ranges, retrieves the corresponding orders using documented GET filters, and reports the date ranges and calculation basis. It labels sums of order total_price as gross order value rather than net revenue, handles pagination, and does not present a partial page as a complete report."
+            },
+            {
+              "description": "List orders created yesterday that remain unfulfilled.",
+              "prompt": "For yesterday, list every order that is still unfulfilled, show its order number and fulfillment status, and give me the count.",
+              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
+              "expected_behavior": "Use the installed order API guide to confirm the documented GET endpoint and supported date or fulfillment filters, then make only that read request. Resolve yesterday using the shop timezone when available and do not invent unsupported filters. Handle every page before reporting a complete list or count. Show order numbers and returned fulfillment statuses, state the date range, and explain any unavailable fields, unsupported filter, or incomplete pagination. Do not retrieve unrelated customer details or modify orders."
+            },
+            {
+              "description": "Summarize daily order volume and gross order value for a requested week.",
+              "prompt": "Show me a day-by-day sales trend for the past week with order count and total order value.",
+              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
+              "expected_behavior": "The assistant retrieves orders within the week using the documented creation-time filters and groups them by created_at date in the shop's applicable timezone, stating the timezone or asking if it cannot determine one. It labels summed total_price as gross order value and handles pagination and empty days accurately."
+            },
+            {
+              "description": "Compare order performance by sales channel using order source fields.",
+              "prompt": "For the past week, compare order count and gross order value by sales channel.",
+              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
+              "expected_behavior": "The assistant retrieves orders for the requested period and groups only by the channel/source values actually returned in the order data. It identifies missing or unknown source values separately, reports the date range and calculation basis, and handles pagination before describing the totals as complete."
+            },
+            {
+              "description": "Summarize payment and fulfillment status across recent orders to give an operational sales snapshot.",
+              "prompt": "Give me a snapshot of this week's orders grouped by payment status and fulfillment status, and highlight orders still awaiting shipment.",
+              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
+              "expected_behavior": "The assistant retrieves the requested week's orders and summarizes the returned financial_status and fulfillment_status fields without conflating the two. It reports the date range, handles pagination, and describes awaiting-shipment orders using the documented fulfillment-status values returned by the API."
+            }
+          ],
+          "negative": [
+            {
+              "description": "The plugin is read-only and must not cancel an order or issue a refund, even when the user refers to their last order.",
+              "prompt": "Cancel my last order and refund the customer with `Fraud` reason."
+            },
+            {
+              "description": "The plugin cannot edit order metadata or apply tags, even when the user refers to their last order.",
+              "prompt": "Add the tag “urgent” to my last order."
+            },
+            {
+              "description": "Creating discount codes is outside the plugin’s current read-only order-data scope. The assistant should explain this limitation without invoking tools.",
+              "prompt": "Create a 10% discount code for my store."
+            }
+          ]
+        },
+        "demo_recording_url": "https://drive.google.com/file/d/1n59bW2n0KlVwf_BXlMWV7rmcTXYSRvnW/view?usp=drive_link"
+      },
+      "publication": {
+        "countries": [
+          "VN"
+        ],
+        "release_notes": "Shortened the first conversation starter to meet the 128-character limit, corrected the privacy policy and terms of service URLs, and set the category to Business & Operations."
+      }
+    }
+  }
+}
