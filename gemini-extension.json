@@ -1,0 +1,7 @@
+{
+  "name": "haravan",
+  "version": "0.1.11",
+  "mcpServers": {
+    "haravan": { "httpUrl": "https://mcp-plugins.haravan.app/mcp" }
+  }
+}

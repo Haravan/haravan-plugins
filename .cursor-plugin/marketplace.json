@@ -1,0 +1,29 @@
+{
+  "name": "haravan-plugins",
+  "owner": {
+    "name": "Haravan"
+  },
+  "metadata": {
+    "description": "Haravan plugins for Cursor"
+  },
+  "plugins": [
+    {
+      "name": "haravan",
+      "source": "./",
+      "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
+      "version": "0.1.11",
+      "author": {
+        "name": "Haravan"
+      },
+      "homepage": "https://www.haravan.com/",
+      "keywords": [
+        "haravan",
+        "mcp",
+        "orders",
+        "sales-report",
+        "ecommerce"
+      ],
+      "license": "MIT"
+    }
+  ]
+}

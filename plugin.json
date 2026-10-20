@@ -87,5 +87,6 @@
         "release_notes": "Shortened the first conversation starter to meet the 128-character limit, corrected the privacy policy and terms of service URLs, and set the category to Business & Operations."
       }
     }
-  }
+  },
+  "license": "MIT"
 }

@@ -1,0 +1,42 @@
+{
+  "name": "haravan",
+  "version": "0.1.11",
+  "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
+  "author": {
+    "name": "Haravan"
+  },
+  "homepage": "https://www.haravan.com/",
+  "repository": "https://github.com/Haravan/haravan-plugins",
+  "keywords": [
+    "haravan",
+    "mcp",
+    "orders",
+    "sales-report",
+    "ecommerce"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Haravan",
+    "shortDescription": "Order insights from Haravan",
+    "longDescription": "Haravan for ChatGPT helps authorized merchants understand order performance using read-only data from their connected shop. Ask for a weekly sales overview, compare this week with the previous week, see daily order counts and gross order value, compare results by sales channel, review payment and fulfillment status, or find orders created yesterday that are still unfulfilled. Haravan retrieves supported order data from your connected shop and summarizes the fields returned by its API. Reports state the requested date range and calculation basis, and are limited by the shop's permissions and available data. Gross order value uses returned order totals and is not net revenue. The plugin currently reads order data only; it does not create or change orders.",
+    "developerName": "Haravan",
+    "category": "Business & Operations",
+    "capabilities": [
+      "Read connected order data",
+      "Summarize order performance and fulfillment"
+    ],
+    "websiteURL": "https://www.haravan.com/",
+    "supportURL": "https://support.haravan.com/",
+    "privacyPolicyURL": "https://www.haravan.com/pages/policy",
+    "termsOfServiceURL": "https://www.haravan.com/pages/quy-dinh",
+    "defaultPrompt": [
+      "Compare this week with last week: order count, gross order value, and average order value.",
+      "For yesterday, list every order still unfulfilled and give me the count.",
+      "For the past week, compare order count and gross order value by sales channel."
+    ],
+    "logo": "./assets/logo_haravan.svg",
+    "composerIcon": "./assets/logo_haravan.svg"
+  },
+  "license": "MIT"
+}
