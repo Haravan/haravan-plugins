@@ -84,7 +84,7 @@
         "countries": [
           "VN"
         ],
-        "release_notes": "First stable release (1.0.0): read-only order reports with clearer rules for timezone, cancelled orders, personal data, and reply language."
+        "release_notes": "First stable release (1.0.0). Cursor now uses the shared MCP config, and the Gemini extension includes a description."
       }
     }
   },
