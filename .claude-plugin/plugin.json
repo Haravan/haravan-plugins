@@ -6,6 +6,11 @@
     "name": "Haravan"
   },
   "homepage": "https://www.haravan.com/",
+  "icon": "./assets/logo_haravan.svg",
+  "privacyPolicyUrl": "https://www.haravan.com/pages/policy",
+  "termsOfServiceUrl": "https://www.haravan.com/pages/quy-dinh",
+  "supportUrl": "https://support.haravan.com/",
+  "documentationUrl": "https://github.com/Haravan/haravan-plugins#readme",
   "repository": "https://github.com/Haravan/haravan-plugins",
   "keywords": [
     "haravan",
