@@ -1,0 +1,74 @@
+# Haravan Inventory Read APIs
+
+## Mục đích
+
+Đọc tồn kho theo location/variant và lịch sử điều chỉnh, chuyển kho, purchase order và purchase receive.
+
+## Quyền và xác thực
+
+- API name: `inventory_read`
+- Resource: `inventory`
+- Method: `GET`
+- Authentication scope: `com.read_inventories`
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+- Tài liệu chính thức: https://docs.haravan.com/docs/omni-apis/inventory-locations/
+
+## Tồn kho theo location và variant
+
+```http
+GET https://apis.haravan.com/com/inventory_locations.json?location_ids=1007284&variant_ids=1064240649&limit=250
+```
+
+Query: `location_ids`, `variant_ids`, `limit` (tối đa 250), `updated_at_min`, `since_id`, `order`, `direction`.
+
+## Lịch sử điều chỉnh tồn kho
+
+```http
+GET https://apis.haravan.com/com/inventories/adjustments.json?page=1&limit=50
+GET https://apis.haravan.com/com/inventories/adjustments/count.json
+GET https://apis.haravan.com/com/inventories/adjustments/{inventory_adjustment_id}.json
+```
+
+## Lịch sử chuyển kho
+
+```http
+GET https://apis.haravan.com/com/inventories/transfers.json?page=1&limit=50
+GET https://apis.haravan.com/com/inventories/transfers/count.json
+GET https://apis.haravan.com/com/inventorytransfer/detail/{inventory_transfer_id}.json
+```
+
+## Purchase order và purchase receive
+
+```http
+GET https://apis.haravan.com/com/inventories/purchase_orders.json?page=1&limit=50
+GET https://apis.haravan.com/com/inventories/purchase_orders/{purchase_id}.json
+GET https://apis.haravan.com/com/v2/inventories/purchase_receives.json?page=1&limit=50
+GET https://apis.haravan.com/com/v2/inventories/purchase_receives/{purchase_receive_id}.json
+```
+
+## Quy tắc
+
+1. Chỉ dùng GET với tài liệu này; không tạo adjustment hoặc transfer.
+2. Khi hỏi tồn khả dụng, ưu tiên trường `qty_available`; không tự tính nếu API đã trả trường này.
+3. Danh sách lớn phải phân trang; không lặp vô hạn.
+
+## Response tồn kho tối giản
+
+```json
+{
+  "inventory_locations": [
+    {
+      "id": 1003098484,
+      "loc_id": 1007284,
+      "product_id": 1028183686,
+      "variant_id": 1064240649,
+      "qty_onhand": 10,
+      "qty_commited": 2,
+      "qty_incoming": 0,
+      "qty_available": 8
+    }
+  ]
+}
+```
+

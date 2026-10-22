@@ -1,0 +1,56 @@
+# Haravan Products API
+
+## Mục đích
+
+Đọc sản phẩm, số lượng sản phẩm, biến thể, hình ảnh, collect và collection liên quan.
+
+## Quyền và xác thực
+
+- API name: `products_read`
+- Resource: `product`
+- Method: `GET`
+- Authentication scope: `com.read_products`
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+- Tài liệu chính thức: https://docs.haravan.com/docs/omni-apis/products/
+
+## Sản phẩm
+
+```http
+GET https://apis.haravan.com/com/products.json?page=1&limit=50
+GET https://apis.haravan.com/com/products/count.json
+GET https://apis.haravan.com/com/products/{product_id}.json
+```
+
+Query danh sách: `ids`, `limit`, `page`, `since_id`, `vendor`, `handle`, `product_type`, `collection_id`, `sku`, `barcode`, `created_at_min`, `created_at_max`, `updated_at_min`, `updated_at_max`, `published_at_min`, `published_at_max`, `fields`.
+
+## Biến thể
+
+```http
+GET https://apis.haravan.com/com/products/{product_id}/variants.json?page=1&limit=50
+GET https://apis.haravan.com/com/products/{product_id}/variants/count.json
+GET https://apis.haravan.com/com/variants/{variant_id}.json
+```
+
+## Hình ảnh sản phẩm
+
+```http
+GET https://apis.haravan.com/com/products/{product_id}/images.json
+GET https://apis.haravan.com/com/products/{product_id}/images/count.json
+GET https://apis.haravan.com/com/products/{product_id}/images/{image_id}.json
+```
+
+## Collect
+
+```http
+GET https://apis.haravan.com/com/collects.json?page=1&limit=50
+GET https://apis.haravan.com/com/collects/count.json
+GET https://apis.haravan.com/com/collects/{collect_id}.json
+```
+
+## Quy tắc
+
+1. Chỉ dùng GET với tài liệu này.
+2. Khi cần chi tiết biến thể hoặc tồn kho, lấy `variant_id` từ product rồi gọi endpoint tương ứng.
+3. Không suy đoán sản phẩm khi tìm không có kết quả.
+

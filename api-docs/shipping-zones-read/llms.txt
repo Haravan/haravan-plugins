@@ -1,0 +1,48 @@
+# Haravan Shipping Zones API
+
+## Mục đích
+
+Đọc danh sách shipping zones, quốc gia, tỉnh và các cấu hình vận chuyển của shop.
+
+## Quyền và xác thực
+
+- API name: `shipping_zones_read`
+- Resource: `shipping_zone`
+- Method: `GET`
+- Authentication scope: `com.read_shipping_zones`
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+
+## Endpoint test
+
+```http
+GET https://apis.haravan.com/com/shipping_zones.json
+```
+
+Có thể thử lọc trường nếu API hỗ trợ:
+
+```http
+GET https://apis.haravan.com/com/shipping_zones.json?fields=id,name,countries,provinces
+```
+
+## Quy tắc
+
+1. Chỉ dùng GET.
+2. Scope và endpoint này chưa có trang riêng trong mục Omni API công khai tại thời điểm tạo tài liệu; nếu Haravan trả 404/403, giữ nguyên response để xác nhận endpoint chính thức với Haravan, không tự đổi sang Shopify endpoint.
+3. Không dùng tài liệu này để tạo/sửa/xóa cấu hình vận chuyển.
+
+## Response dự kiến
+
+```json
+{
+  "shipping_zones": [
+    {
+      "id": 1,
+      "name": "Vietnam",
+      "countries": [],
+      "provinces": []
+    }
+  ]
+}
+```
+

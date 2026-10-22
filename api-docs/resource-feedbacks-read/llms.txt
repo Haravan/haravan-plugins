@@ -1,0 +1,50 @@
+# Haravan Resource Feedback API
+
+## Mục đích
+
+Đọc feedback/trạng thái xử lý của resource do app hoặc kênh bán hàng tạo.
+
+## Quyền và xác thực
+
+- API name: `resource_feedbacks_read`
+- Resource: `resource_feedback`
+- Method: `GET`
+- Authentication scope: `com.read_resource_feedbacks`
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+
+## Endpoint test
+
+Endpoint theo tên resource REST dạng số nhiều:
+
+```http
+GET https://apis.haravan.com/com/resource_feedbacks.json?page=1&limit=50
+```
+
+Nếu API dùng resource singular theo convention `resource_feedback`, thử endpoint sau trong cùng một lần kiểm tra thủ công:
+
+```http
+GET https://apis.haravan.com/com/resource_feedback.json
+```
+
+## Quy tắc
+
+1. Chỉ dùng GET; app hiện không có quyền ghi feedback.
+2. Scope và endpoint này chưa có trang riêng trong mục Omni API công khai tại thời điểm tạo tài liệu. Nếu cả hai URL đều 404/403, cần xác nhận endpoint chính thức với Haravan.
+3. Không tự tạo feedback hoặc thay đổi trạng thái.
+
+## Response dự kiến
+
+```json
+{
+  "resource_feedbacks": [
+    {
+      "resource_id": 123,
+      "resource_type": "Shop",
+      "state": "success",
+      "messages": []
+    }
+  ]
+}
+```
+
