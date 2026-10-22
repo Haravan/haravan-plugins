@@ -1,0 +1,50 @@
+# Haravan Sale Channels API
+
+## Mục đích
+
+Đọc các kênh bán hàng đã cấu hình trong shop.
+
+## Quyền và xác thực
+
+- API name: `salechannels_read`
+- Resource: `sale_channel`
+- Method: `GET`
+- Authentication scope: `com.read_salechannels`
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+
+## Endpoint test
+
+Tên scope của app dùng `salechannels` không có dấu gạch dưới; endpoint test tương ứng:
+
+```http
+GET https://apis.haravan.com/com/salechannels.json?page=1&limit=50
+```
+
+Nếu API hỗ trợ lấy một kênh:
+
+```http
+GET https://apis.haravan.com/com/salechannels/{sale_channel_id}.json
+```
+
+## Quy tắc
+
+1. Chỉ dùng GET.
+2. Scope và endpoint này chưa có trang riêng trong mục Omni API công khai tại thời điểm tạo tài liệu. Nếu nhận 404/403, cần xác nhận tên resource chính thức với Haravan; không tự thay bằng `/channels.json`.
+3. Không tự suy đoán mã kênh hoặc trạng thái kết nối.
+
+## Response dự kiến
+
+```json
+{
+  "salechannels": [
+    {
+      "id": 1,
+      "name": "Website",
+      "code": "web",
+      "status": "active"
+    }
+  ]
+}
+```
+

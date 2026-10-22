@@ -1,0 +1,53 @@
+# API ghi đơn hàng Haravan
+
+## Khả năng
+
+- Tài nguyên: `order`
+- Phạm vi quyền bắt buộc: `com.write_orders`
+- Chính sách thao tác thay đổi dữ liệu: mặc định chỉ đọc; phải có xác nhận rõ ràng của người dùng
+- Khóa chống lặp: khi thử lại cùng một thao tác thay đổi dữ liệu, phải dùng lại cùng một khóa
+- Nhật ký kiểm tra: hệ thống phải ghi nhận thao tác nhưng không lưu mã truy cập hoặc bí mật gốc
+
+Tài liệu này mô tả khả năng ghi đơn hàng dành cho kết nối có phạm vi quyền
+`com.write_orders`. Phạm vi quyền được gán khi đăng ký tài liệu mới là căn cứ
+kiểm soát truy cập; nội dung Markdown này không thay thế bước kiểm tra quyền
+ở máy chủ.
+
+## Tạo đơn hàng
+
+- Tên thao tác: `create_order`
+- Phương thức: `POST`
+- Địa chỉ: `https://apis.haravan.com/com/orders.json`
+- Định dạng yêu cầu: đối tượng JSON
+- Định dạng kết quả: JSON
+
+Trước khi tạo đơn hàng:
+
+1. Xác nhận khách hàng, sản phẩm, số lượng và giá theo yêu cầu.
+2. Hỏi xác nhận rõ ràng của người dùng ngay trước khi thực hiện.
+3. Gửi khóa chống lặp và dùng lại khóa đó nếu phải thử lại cùng yêu cầu.
+4. Không gửi `Authorization`; máy chủ sẽ tự thêm thông tin xác thực.
+
+### Ví dụ yêu cầu
+
+```http
+POST https://apis.haravan.com/com/orders.json
+Content-Type: application/json
+
+{
+  "order": {
+    "line_items": [
+      {"variant_id": 1061514693, "quantity": 1}
+    ]
+  }
+}
+```
+
+Không tự suy đoán khách hàng, sản phẩm, biến thể, giá hoặc thuế. Nếu thiếu
+thông tin bắt buộc, hãy hỏi người dùng trước khi tạo yêu cầu.
+
+## Ranh giới an toàn
+
+Tài liệu này chỉ hướng dẫn cách sử dụng khả năng MCP. Máy chủ vẫn phải kiểm
+tra phạm vi quyền của kết nối và chính sách thao tác thay đổi dữ liệu trước khi
+gọi Haravan.

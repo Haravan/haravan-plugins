@@ -1,0 +1,46 @@
+# Haravan Shipping Rates API
+
+## Mục đích
+
+Tra cứu phí vận chuyển theo quốc gia, tỉnh, quận, giá trị đơn và khối lượng.
+
+## Quyền và xác thực
+
+- API name: `shipping_rates_read`
+- Resource: `shipping_rate`
+- Method: `GET`
+- Authentication scope: `com.read_shippings` (tài liệu access scope của Haravan cũng liệt kê Shipping Rates dưới nhóm shipping)
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+- Tài liệu chính thức: https://docs.haravan.com/docs/omni-apis/shipping-rates/
+
+## Tra cứu phí vận chuyển
+
+```http
+GET https://apis.haravan.com/com/shipping_rates.json?country_id=241&province_id=50&district_id=478&total_price=500000&total_weight=1000
+```
+
+Query:
+
+- `country_id`: ID quốc gia.
+- `province_id`: ID tỉnh/thành.
+- `district_id`: ID quận/huyện.
+- `total_price`: tổng giá trị đơn.
+- `total_weight`: tổng khối lượng gói hàng.
+
+## Response tối giản
+
+```json
+{
+  "shipping_rates": [
+    {
+      "id": 1607492,
+      "title": "Giao hàng tận nơi",
+      "price": 20000
+    }
+  ]
+}
+```
+
+Chỉ dùng GET. Nếu thiếu địa chỉ, hỏi người dùng hoặc lấy ID từ dữ liệu shop; không tự đoán ID.
+

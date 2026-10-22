@@ -1,0 +1,68 @@
+# Haravan Customers API
+
+## Mục đích
+
+Đọc danh sách, tìm kiếm, đếm và lấy chi tiết khách hàng trong cửa hàng Haravan.
+
+## Quyền và xác thực
+
+- API name: `customers_read`
+- Resource: `customer`
+- Method: `GET`
+- Authentication scope: `com.read_customers`
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+- Tài liệu chính thức: https://docs.haravan.com/docs/omni-apis/customer/
+
+## Endpoints
+
+### Danh sách khách hàng
+
+```http
+GET https://apis.haravan.com/com/customers.json?page=1&limit=50&order=updated_at%20desc
+```
+
+Query thường dùng: `ids`, `since_id`, `created_at_min`, `created_at_max`, `updated_at_min`, `updated_at_max`, `limit`, `page`, `fields`, `order`.
+
+### Tìm kiếm khách hàng
+
+```http
+GET https://apis.haravan.com/com/customers/search.json?query=nguyen@example.com
+```
+
+### Đếm khách hàng
+
+```http
+GET https://apis.haravan.com/com/customers/count.json
+```
+
+### Chi tiết khách hàng
+
+```http
+GET https://apis.haravan.com/com/customers/{customer_id}.json
+```
+
+## Quy tắc
+
+1. Mặc định dùng `limit=50` và `page=1`; nếu cần báo cáo phải phân trang đến hết.
+2. Không suy đoán khách hàng khi API trả danh sách rỗng.
+3. Chỉ dùng GET với tài liệu này. Các thao tác tạo/sửa/xóa cần scope ghi và tài liệu riêng.
+
+## Response tối giản
+
+```json
+{
+  "customers": [
+    {
+      "id": 1042784950,
+      "first_name": "John",
+      "last_name": "Norman",
+      "email": "customer@example.com",
+      "phone": "0333333333",
+      "orders_count": 4,
+      "total_spent": 0
+    }
+  ]
+}
+```
+

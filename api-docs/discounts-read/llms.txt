@@ -1,0 +1,60 @@
+# Haravan Discounts API
+
+## Mục đích
+
+Đọc các discount code đang có trong cửa hàng và lấy discount theo ID hoặc mã.
+
+## Quyền và xác thực
+
+- API name: `discounts_read`
+- Resource: `discount_code`
+- Method: `GET`
+- Authentication scope: `com.read_discounts`
+- Endpoint prefix: `https://apis.haravan.com/com`
+- Runtime tự thêm `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`; không tự gửi hoặc hiển thị token.
+- Tài liệu chính thức: https://docs.haravan.com/docs/omni-apis/discount/discount-codes/
+
+## Endpoints
+
+### Danh sách discount code
+
+```http
+GET https://apis.haravan.com/com/discounts.json?page=1&limit=50
+```
+
+Query thường dùng: `limit`, `page`, `since_id`, `code`.
+
+### Lọc theo mã
+
+```http
+GET https://apis.haravan.com/com/discounts.json?code=GARMIN55
+```
+
+### Chi tiết discount code
+
+```http
+GET https://apis.haravan.com/com/discounts/{discount_id}.json
+```
+
+## Quy tắc
+
+1. Chỉ dùng GET với tài liệu này.
+2. Không dùng endpoint POST/PUT/DELETE vì app hiện chỉ có `com.read_discounts`.
+3. Nếu cần đổi trạng thái discount, phải có scope ghi tương ứng và xác nhận của người dùng.
+
+## Response tối giản
+
+```json
+{
+  "discounts": [
+    {
+      "id": 1016875801,
+      "code": "GARMIN55",
+      "status": "enabled",
+      "discount_type": "percentage",
+      "value": 5
+    }
+  ]
+}
+```
+

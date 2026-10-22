@@ -1,0 +1,192 @@
+# Haravan Orders API
+
+## Mục đích
+
+API này dùng để lấy danh sách đơn hàng từ Haravan, hỗ trợ lấy đơn gần nhất, lọc theo thời gian, trạng thái đơn hàng, trạng thái thanh toán, trạng thái giao hàng, phân trang và sắp xếp.
+
+## Thông tin API
+
+- API name: `list_orders`
+- Resource: `order`
+- Action: `list_search`
+- Method: `GET`
+- Endpoint: `https://apis.haravan.com/com/orders.json`
+- Authentication scope: `com.read_orders`
+- Response format: JSON
+- Read-only: true
+- Maximum limit per page: 50
+
+## Quy tắc sử dụng cho AI
+
+1. Chỉ sử dụng API này cho việc đọc và tìm kiếm đơn hàng.
+2. Token do runtime cung cấp qua header `Authorization: Bearer <HARAVAN_ACCESS_TOKEN>`.
+3. Không yêu cầu, hiển thị hoặc ghi log access token.
+4. Với "đơn gần nhất", dùng `order=created_at desc`.
+5. Với "đơn cập nhật gần nhất", dùng `order=updated_at desc`.
+6. Với "7 ngày qua", chuyển thành `created_at_min` và `created_at_max` theo ISO 8601.
+7. Với yêu cầu số lượng cụ thể, dùng `limit` tương ứng và `page=1`.
+8. Không dùng `status=any` trừ khi người dùng yêu cầu tất cả đơn, kể cả đơn đã lưu trữ.
+9. Khi cần thống kê, phải lấy đủ các trang trước rồi mới đếm, nhóm hoặc cộng dữ liệu ở workflow/runtime.
+10. Nếu không có dữ liệu, không được suy đoán hoặc tạo dữ liệu giả.
+
+## Query parameters
+
+| Parameter | Mô tả |
+|---|---|
+| `ids` | Danh sách order ID, phân tách bằng dấu phẩy |
+| `limit` | Số kết quả mỗi trang, mặc định 50, tối đa 50 |
+| `page` | Số trang |
+| `since_id` | Chỉ lấy đơn có ID lớn hơn ID này |
+| `created_at_min` | Đơn được tạo sau thời điểm này |
+| `created_at_max` | Đơn được tạo trước thời điểm này |
+| `updated_at_min` | Đơn được cập nhật sau thời điểm này |
+| `updated_at_max` | Đơn được cập nhật trước thời điểm này |
+| `processed_at_min` | Đơn được import/xử lý sau thời điểm này |
+| `processed_at_max` | Đơn được import/xử lý trước thời điểm này |
+| `financial_status` | `pending`, `paid`, `partially_paid`, `refunded`, `voided`, `partially_refunded` |
+| `fulfillment_status` | `unshipped`, `shipped`, `partial` |
+| `status` | `open`, `closed`, `cancelled`, `any` |
+| `fields` | Danh sách trường cần trả về, phân tách bằng dấu phẩy |
+| `order` | Sắp xếp theo `created_at` hoặc `updated_at`, kèm `asc` hoặc `desc` |
+
+## Request mẫu
+
+### 10 đơn gần nhất
+
+```http
+GET https://apis.haravan.com/com/orders.json?limit=10&page=1&order=created_at%20desc
+Authorization: Bearer <HARAVAN_ACCESS_TOKEN>
+```
+
+### Đơn trong 7 ngày gần nhất
+
+```http
+GET https://apis.haravan.com/com/orders.json?limit=50&page=1&created_at_min=<START>&created_at_max=<END>&order=created_at%20desc
+Authorization: Bearer <HARAVAN_ACCESS_TOKEN>
+```
+
+### Đơn đã hủy
+
+```http
+GET https://apis.haravan.com/com/orders.json?limit=50&page=1&status=cancelled&order=created_at%20desc
+Authorization: Bearer <HARAVAN_ACCESS_TOKEN>
+```
+
+### Đơn đã thanh toán nhưng chưa giao
+
+```http
+GET https://apis.haravan.com/com/orders.json?limit=50&page=1&financial_status=paid&fulfillment_status=unshipped&order=created_at%20desc
+Authorization: Bearer <HARAVAN_ACCESS_TOKEN>
+```
+
+## Response tối giản
+
+```json
+{
+  "orders": [
+    {
+      "id": 1138637099,
+      "name": "#100020",
+      "order_number": "#100020",
+      "created_at": "2026-09-22T08:30:00Z",
+      "updated_at": "2026-09-22T08:35:00Z",
+      "currency": "VND",
+      "financial_status": "paid",
+      "fulfillment_status": "unshipped",
+      "customer": {
+        "id": 1036847352,
+        "first_name": "Nguyen",
+        "last_name": "Van A",
+        "email": "customer@example.com",
+        "phone": "0900000000"
+      },
+      "line_items": [
+        {
+          "product_id": 1028183659,
+          "variant_id": 1061514693,
+          "title": "Áo thun basic",
+          "variant_title": "Đen / M",
+          "quantity": 2,
+          "price": 250000,
+          "sku": "TS-BLACK-M"
+        }
+      ],
+      "subtotal_price": 500000,
+      "total_discounts": 0,
+      "total_price": 500000,
+      "total_tax": 0
+    }
+  ]
+}
+```
+
+## Trường quan trọng
+
+- Nhận dạng: `id`, `name`, `order_number`, `token`
+- Thời gian: `created_at`, `updated_at`, `processed_at`, `confirmed_at`, `closed_at`, `cancelled_at`
+- Trạng thái: `financial_status`, `fulfillment_status`, `cancel_reason`, `cancelled_status`, `closed_status`, `confirmed_status`
+- Khách hàng: `customer`, `customer.id`, `customer.email`, `customer.phone`, `customer.orders_count`, `customer.total_spent`
+- Sản phẩm: `line_items`, `product_id`, `variant_id`, `title`, `variant_title`, `sku`, `barcode`, `quantity`, `price`
+- Giá trị: `currency`, `subtotal_price`, `total_line_items_price`, `total_discounts`, `total_tax`, `total_price`
+- Giao hàng/thanh toán: `shipping_address`, `billing_address`, `shipping_lines`, `gateway`, `gateway_code`, `transactions`, `fulfillments`
+
+`customer` có thể là `null`, đặc biệt với đơn tạo từ Haravan POS. Không được giả định mọi đơn đều có khách hàng.
+
+## Phân trang
+
+1. Dùng `limit=50`.
+2. Bắt đầu từ `page=1`.
+3. Tăng page tuần tự.
+4. Dừng khi response rỗng hoặc số kết quả nhỏ hơn `limit`.
+5. Không lặp vô hạn.
+6. Với báo cáo, phải lấy đủ tất cả trang trước khi tính toán.
+
+## Mapping câu hỏi tự nhiên
+
+| Câu hỏi | Query |
+|---|---|
+| 10 đơn gần nhất | `limit=10&order=created_at desc` |
+| Đơn cập nhật gần nhất | `order=updated_at desc` |
+| Đơn trong 7 ngày qua | `created_at_min` và `created_at_max` |
+| Đơn đã hủy | `status=cancelled` |
+| Đơn đang mở | `status=open` |
+| Tất cả đơn | `status=any` |
+| Đơn đã thanh toán | `financial_status=paid` |
+| Đơn chưa thanh toán | `financial_status=pending` |
+| Đơn chưa giao | `fulfillment_status=unshipped` |
+| Đơn đã giao | `fulfillment_status=shipped` |
+
+## Xử lý thống kê
+
+API chỉ trả về danh sách đơn hàng. Các phép đếm, nhóm theo khách hàng, tính doanh thu hoặc tìm sản phẩm bán chạy phải thực hiện ở workflow/runtime.
+
+Ví dụ với câu hỏi "Ai mua nhiều nhất trong 7 ngày qua?":
+
+1. Xác định khoảng thời gian.
+2. Lấy toàn bộ đơn qua phân trang.
+3. Bỏ qua đơn không có `customer` nếu không thể xác định khách.
+4. Nhóm theo `customer.id` hoặc số điện thoại.
+5. Tính tổng `line_items.quantity` hoặc tổng số đơn tùy yêu cầu.
+6. Trả về kết quả kèm dữ liệu chứng minh.
+
+## Xử lý lỗi
+
+- Không có kết quả: thông báo không tìm thấy đơn phù hợp.
+- `customer=null`: coi là dữ liệu thiếu hợp lệ, không phải lỗi API.
+- HTTP 401/403: báo lỗi kết nối hoặc quyền truy cập, không hiển thị token.
+- Rate limit: retry có backoff, không lặp vô hạn.
+- `limit > 50`: giới hạn về 50 hoặc báo lỗi rõ ràng.
+- Ngày sai định dạng: chuẩn hóa về ISO 8601 trước khi gọi API.
+
+## Giới hạn
+
+- API này chỉ đọc danh sách đơn hàng.
+- Không tự thực hiện aggregation.
+- Không có tham số trực tiếp để tìm theo tên hoặc số điện thoại khách hàng trong endpoint này.
+- `id` và `order_number` là hai định danh khác nhau.
+- Một số đơn POS không có thông tin khách hàng.
+- `limit` tối đa là 50 cho mỗi request.
+
+## Nguồn tài liệu
+
+https://docs.haravan.com/docs/omni-apis/orders/#retrieves-a-list-of-orders
