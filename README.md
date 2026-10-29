@@ -31,7 +31,7 @@ The plugin turns Haravan order data into sales reports, weekly comparisons, dail
 
 ## What you get
 
-- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): discover, inspect, and call Haravan order APIs with GET requests
+- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): read-only order tools: `search_orders`, `get_order`, `summarize_sales`
 - **`haravan-api-workflow` skill**: guides the agent through order reports, pagination, timezones, and calculation basis
 
 ## Repository layout

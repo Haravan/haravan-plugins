@@ -1,6 +1,6 @@
 {
   "name": "haravan",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
   "mcpServers": {
     "haravan": { "httpUrl": "https://mcp-plugins.haravan.app/mcp" }

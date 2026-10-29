@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "haravan",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
   "extensions": {
     "com.openai": {
@@ -35,32 +35,32 @@
             {
               "description": "Create a natural-language weekly sales overview from order data, including order count, gross order value, and average order value.",
               "prompt": "Prepare a sales report for the past week: number of orders, total order value, average order value, and how it compares with the previous week.",
-              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
-              "expected_behavior": "The assistant resolves the past-week and previous-week date ranges, retrieves the corresponding orders using documented GET filters, and reports the date ranges and calculation basis. It labels sums of order total_price as gross order value rather than net revenue, handles pagination, and does not present a partial page as a complete report."
+              "tools_triggered": "summarize_sales",
+              "expected_behavior": "The assistant resolves the past-week and previous-week date ranges and calls summarize_sales once per week. It reports the date ranges, time zone and calculation basis, labels the sum of order totals as gross order value rather than net revenue, and notes that cancelled orders are excluded. If a result has complete false, it splits the range before reporting totals."
             },
             {
               "description": "List orders created yesterday that remain unfulfilled.",
               "prompt": "For yesterday, list every order that is still unfulfilled, show its order number and fulfillment status, and give me the count.",
-              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
-              "expected_behavior": "Use the installed order API guide to confirm the documented GET endpoint and supported date or fulfillment filters, then make only that read request. Resolve yesterday using the shop timezone when available and do not invent unsupported filters. Handle every page before reporting a complete list or count. Show order numbers and returned fulfillment statuses, state the date range, and explain any unavailable fields, unsupported filter, or incomplete pagination. Do not retrieve unrelated customer details or modify orders."
+              "tools_triggered": "search_orders",
+              "expected_behavior": "The assistant calls search_orders with yesterday's creation range and fulfillment_status unshipped, requests further pages while has_more is true, and reports order numbers, fulfillment statuses and the count. It states the date range and time zone, and does not retrieve unrelated customer details or modify orders."
             },
             {
               "description": "Summarize daily order volume and gross order value for a requested week.",
               "prompt": "Show me a day-by-day sales trend for the past week with order count and total order value.",
-              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
-              "expected_behavior": "The assistant retrieves orders within the week using the documented creation-time filters and groups them by created_at date in the shop's applicable timezone, stating the timezone or asking if it cannot determine one. It labels summed total_price as gross order value and handles pagination and empty days accurately."
+              "tools_triggered": "summarize_sales",
+              "expected_behavior": "The assistant calls summarize_sales for the week and presents by_day order counts and gross order value in Vietnam time, showing days without orders as zero. It states the time zone and calculation basis."
             },
             {
               "description": "Compare order performance by sales channel using order source fields.",
               "prompt": "For the past week, compare order count and gross order value by sales channel.",
-              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
-              "expected_behavior": "The assistant retrieves orders for the requested period and groups only by the channel/source values actually returned in the order data. It identifies missing or unknown source values separately, reports the date range and calculation basis, and handles pagination before describing the totals as complete."
+              "tools_triggered": "summarize_sales",
+              "expected_behavior": "The assistant calls summarize_sales for the period and groups only by the by_source values returned, reporting unknown sources separately, with the date range and calculation basis."
             },
             {
               "description": "Summarize payment and fulfillment status across recent orders to give an operational sales snapshot.",
               "prompt": "Give me a snapshot of this week's orders grouped by payment status and fulfillment status, and highlight orders still awaiting shipment.",
-              "tools_triggered": "haravan_discover_api, haravan_inspect_api, haravan_execute_api",
-              "expected_behavior": "The assistant retrieves the requested week's orders and summarizes the returned financial_status and fulfillment_status fields without conflating the two. It reports the date range, handles pagination, and describes awaiting-shipment orders using the documented fulfillment-status values returned by the API."
+              "tools_triggered": "summarize_sales, search_orders",
+              "expected_behavior": "The assistant uses summarize_sales for the payment-status breakdown and search_orders with fulfillment_status unshipped for orders awaiting shipment, without conflating financial_status and fulfillment_status. It reports the date range and handles pagination before calling the list complete."
             }
           ],
           "negative": [
@@ -84,7 +84,7 @@
         "countries": [
           "VN"
         ],
-        "release_notes": "First stable release (1.0.0). Cursor now uses the shared MCP config, and the Gemini extension includes a description."
+        "release_notes": "1.1.0: each order operation is now a separate read-only tool (search orders, get order details, summarize sales), and the app only requests order read permission."
       }
     }
   },
