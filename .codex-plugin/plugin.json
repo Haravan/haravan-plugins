@@ -1,7 +1,7 @@
 {
   "name": "haravan",
-  "version": "1.1.0",
-  "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
+  "version": "1.2.0",
+  "description": "Turn Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries.",
   "author": {
     "name": "Haravan"
   },
@@ -18,22 +18,22 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Haravan",
-    "shortDescription": "Order insights from Haravan",
-    "longDescription": "Haravan for ChatGPT helps authorized merchants understand order performance using read-only data from their connected shop. Ask for a weekly sales overview, compare this week with the previous week, see daily order counts and gross order value, compare results by sales channel, review payment and fulfillment status, or find orders created yesterday that are still unfulfilled. Haravan retrieves supported order data from your connected shop and summarizes the fields returned by its API. Reports state the requested date range and calculation basis, and are limited by the shop's permissions and available data. Gross order value uses returned order totals and is not net revenue. The plugin currently reads order data only; it does not create or change orders.",
+    "shortDescription": "Sales and stock insights from Haravan",
+    "longDescription": "Haravan for ChatGPT helps authorized merchants understand sales and stock using read-only data from their connected shop. Ask for net sales, profit or quantity sold over a period, compare this week with the previous week, see a day-by-day trend, break sales down by channel, product, branch or province, find orders created yesterday that are still unfulfilled, see which products are about to run out, or check stock on hand by branch. Sales and stock figures come from Haravan Reports; order lists come from the shop's orders. Reports state the requested date range and the metrics used, and are limited by the shop's permissions and available data. The plugin only reads data; it does not create or change orders, products or stock.",
     "developerName": "Haravan",
     "category": "Business & Operations",
     "capabilities": [
-      "Read connected order data",
-      "Summarize order performance and fulfillment"
+      "Read connected order, sales and inventory data",
+      "Summarize sales performance, fulfillment and stock levels"
     ],
     "websiteURL": "https://www.haravan.com/",
     "supportURL": "https://support.haravan.com/",
     "privacyPolicyURL": "https://www.haravan.com/pages/policy",
     "termsOfServiceURL": "https://www.haravan.com/pages/quy-dinh",
     "defaultPrompt": [
-      "Compare this week with last week: order count, gross order value, and average order value.",
+      "Compare this week with last week: net sales, profit, and quantity sold.",
       "For yesterday, list every order still unfulfilled and give me the count.",
-      "For the past week, compare order count and gross order value by sales channel."
+      "Which products will run out of stock soonest, and at which branch?"
     ],
     "logo": "./assets/logo_haravan.svg",
     "composerIcon": "./assets/logo_haravan.svg"

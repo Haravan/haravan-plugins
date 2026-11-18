@@ -2,7 +2,7 @@
 
 Connect your AI tools to your Haravan shop.
 
-The plugin turns Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries. It is read-only: it does not create or change orders.
+The plugin turns Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries. It is read-only: it does not create or change orders, products or stock.
 
 ## Install
 
@@ -31,8 +31,8 @@ The plugin turns Haravan order data into sales reports, weekly comparisons, dail
 
 ## What you get
 
-- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): read-only order tools: `search_orders`, `get_order`, `summarize_sales`
-- **`haravan-api-workflow` skill**: guides the agent through order reports, pagination, timezones, and calculation basis
+- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): read-only tools: `search_orders`, `get_order`, `analyze_sales`, `list_low_stock`, `get_inventory_balances`
+- **`haravan-api-workflow` skill**: guides the agent through sales and stock reports, order lists, pagination and timezones
 
 ## Repository layout
 

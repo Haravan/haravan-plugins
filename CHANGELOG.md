@@ -1,5 +1,12 @@
 # haravan
 
+## 1.2.0
+
+- Sales figures now come from Haravan Reports: `analyze_sales` (net sales, profit, quantity, returns, grouped by up to 3 dimensions) replaces `summarize_sales`.
+- New `list_low_stock` and `get_inventory_balances` tools for products about to run out and stock on hand.
+- The app also requests `report_api`; existing connections must reconnect.
+- Updated the `haravan-api-workflow` skill, README, manifest descriptions and OpenAI review test cases.
+
 ## 1.1.0
 
 - Each order operation is now its own read-only tool: `search_orders`, `get_order` and `summarize_sales` replace the generic discover/inspect/execute API tools.
