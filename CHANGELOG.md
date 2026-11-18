@@ -1,6 +1,6 @@
 # haravan
 
-## 1.2.0
+## 1.1.3
 
 - Sales figures now come from Haravan Reports: `analyze_sales` (net sales, profit, quantity, returns, grouped by up to 3 dimensions) replaces `summarize_sales`.
 - New `list_low_stock` and `get_inventory_balances` tools for products about to run out and stock on hand.
