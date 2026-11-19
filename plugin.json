@@ -1,42 +1,42 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "haravan",
-  "version": "1.1.0",
-  "description": "Turn Haravan order data into sales reports, weekly comparisons, daily trends, order lists, and payment or fulfillment summaries.",
+  "version": "1.1.3",
+  "description": "Turn Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries.",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Haravan",
-        "shortDescription": "Order insights from Haravan",
-        "longDescription": "Haravan for ChatGPT helps authorized merchants understand order performance using read-only data from their connected shop. Ask for a weekly sales overview, compare this week with the previous week, see daily order counts and gross order value, compare results by sales channel, review payment and fulfillment status, or find orders created yesterday that are still unfulfilled. Haravan retrieves supported order data from your connected shop and summarizes the fields returned by its API. Reports state the requested date range and calculation basis, and are limited by the shop's permissions and available data. Gross order value uses returned order totals and is not net revenue. The plugin currently reads order data only; it does not create or change orders.",
+        "shortDescription": "Sales and stock insights from Haravan",
+        "longDescription": "Haravan for ChatGPT helps authorized merchants understand sales and stock using read-only data from their connected shop. Ask for net sales, profit or quantity sold over a period, compare this week with the previous week, see a day-by-day trend, break sales down by channel, product, branch or province, find orders created yesterday that are still unfulfilled, see which products are about to run out, or check stock on hand by branch. Sales and stock figures come from Haravan Reports; order lists come from the shop's orders. Reports state the requested date range and the metrics used, and are limited by the shop's permissions and available data. The plugin only reads data; it does not create or change orders, products or stock.",
         "developerName": "Haravan",
         "category": "Business & Operations",
         "capabilities": [
-          "Read connected order data",
-          "Summarize order performance and fulfillment"
+          "Read connected order, sales and inventory data",
+          "Summarize sales performance, fulfillment and stock levels"
         ],
         "websiteURL": "https://www.haravan.com/",
         "supportURL": "https://support.haravan.com/",
         "privacyPolicyURL": "https://www.haravan.com/pages/policy",
         "termsOfServiceURL": "https://www.haravan.com/pages/quy-dinh",
         "defaultPrompt": [
-          "Compare this week with last week: order count, gross order value, and average order value.",
+          "Compare this week with last week: net sales, profit, and quantity sold.",
           "For yesterday, list every order still unfulfilled and give me the count.",
-          "For the past week, compare order count and gross order value by sales channel."
+          "Which products will run out of stock soonest, and at which branch?"
         ],
         "logo": "./assets/logo_haravan.svg",
         "composerIcon": "./assets/logo_haravan.svg"
       },
       "review": {
         "commerce": true,
-        "commerce_description": "This plugin is for merchants managing their own Haravan shops. In its current release, it only reads order data through GET requests. It does not create, update, cancel, close, confirm, refund, or otherwise change orders.",
+        "commerce_description": "This plugin is for merchants managing their own Haravan shops. In its current release, it only reads order, sales report and inventory data through GET requests. It does not create, update, cancel, close, confirm, refund, or otherwise change orders, products or stock.",
         "test_cases": {
           "positive": [
             {
-              "description": "Create a natural-language weekly sales overview from order data, including order count, gross order value, and average order value.",
-              "prompt": "Prepare a sales report for the past week: number of orders, total order value, average order value, and how it compares with the previous week.",
-              "tools_triggered": "summarize_sales",
-              "expected_behavior": "The assistant resolves the past-week and previous-week date ranges and calls summarize_sales once per week. It reports the date ranges, time zone and calculation basis, labels the sum of order totals as gross order value rather than net revenue, and notes that cancelled orders are excluded. If a result has complete false, it splits the range before reporting totals."
+              "description": "Create a weekly sales overview and compare it with the previous week.",
+              "prompt": "Prepare a sales report for the past week: net sales, profit and quantity sold, and how it compares with the previous week.",
+              "tools_triggered": "analyze_sales",
+              "expected_behavior": "The assistant resolves the past-week and previous-week date ranges and calls analyze_sales once per week with metrics such as NetSaleAmount, Profit and Quantity and no dimensions. It reports both date ranges, the time zone and the metric names used, and notes that cancelled orders are excluded."
             },
             {
               "description": "List orders created yesterday that remain unfulfilled.",
@@ -45,22 +45,28 @@
               "expected_behavior": "The assistant calls search_orders with yesterday's creation range and fulfillment_status unshipped, requests further pages while has_more is true, and reports order numbers, fulfillment statuses and the count. It states the date range and time zone, and does not retrieve unrelated customer details or modify orders."
             },
             {
-              "description": "Summarize daily order volume and gross order value for a requested week.",
-              "prompt": "Show me a day-by-day sales trend for the past week with order count and total order value.",
-              "tools_triggered": "summarize_sales",
-              "expected_behavior": "The assistant calls summarize_sales for the week and presents by_day order counts and gross order value in Vietnam time, showing days without orders as zero. It states the time zone and calculation basis."
+              "description": "Show a day-by-day sales trend for a requested week.",
+              "prompt": "Show me a day-by-day sales trend for the past week with net sales and quantity sold.",
+              "tools_triggered": "analyze_sales",
+              "expected_behavior": "The assistant calls analyze_sales for the week with dimensions Day and metrics NetSaleAmount and Quantity, sorted by day, and presents one row per day in Vietnam time, treating days without rows as zero. It states the date range and metrics used."
             },
             {
-              "description": "Compare order performance by sales channel using order source fields.",
-              "prompt": "For the past week, compare order count and gross order value by sales channel.",
-              "tools_triggered": "summarize_sales",
-              "expected_behavior": "The assistant calls summarize_sales for the period and groups only by the by_source values returned, reporting unknown sources separately, with the date range and calculation basis."
+              "description": "Compare sales by sales channel.",
+              "prompt": "For the past week, compare net sales and quantity sold by sales channel.",
+              "tools_triggered": "analyze_sales",
+              "expected_behavior": "The assistant calls analyze_sales with dimensions SourceName and reports only the channels returned, with the date range and metrics used. It requests further pages while has_more is true."
             },
             {
-              "description": "Summarize payment and fulfillment status across recent orders to give an operational sales snapshot.",
-              "prompt": "Give me a snapshot of this week's orders grouped by payment status and fulfillment status, and highlight orders still awaiting shipment.",
-              "tools_triggered": "summarize_sales, search_orders",
-              "expected_behavior": "The assistant uses summarize_sales for the payment-status breakdown and search_orders with fulfillment_status unshipped for orders awaiting shipment, without conflating financial_status and fulfillment_status. It reports the date range and handles pagination before calling the list complete."
+              "description": "Find products that are about to run out of stock.",
+              "prompt": "Which products will run out of stock soonest, and at which branch? Show the days of stock left.",
+              "tools_triggered": "list_low_stock",
+              "expected_behavior": "The assistant calls list_low_stock with the default soonest-stockout ordering and reports each variant and branch with quantity on hand, average quantity sold per day and estimated days until stockout. It does not change stock or create purchase orders."
+            },
+            {
+              "description": "Summarize stock on hand by branch.",
+              "prompt": "How much stock do I have at each branch, and what is it worth at cost?",
+              "tools_triggered": "get_inventory_balances",
+              "expected_behavior": "The assistant calls get_inventory_balances with dimensions LocId and metrics QtyOnHand, QtyAvailable and TotalCostAmount, and reports one row per branch, requesting further pages while has_more is true."
             }
           ],
           "negative": [
@@ -73,7 +79,7 @@
               "prompt": "Add the tag “urgent” to my last order."
             },
             {
-              "description": "Creating discount codes is outside the plugin’s current read-only order-data scope. The assistant should explain this limitation without invoking tools.",
+              "description": "Creating discount codes is outside the plugin's read-only scope. The assistant should explain this limitation without invoking tools.",
               "prompt": "Create a 10% discount code for my store."
             }
           ]
@@ -84,7 +90,7 @@
         "countries": [
           "VN"
         ],
-        "release_notes": "1.1.0: each order operation is now a separate read-only tool (search orders, get order details, summarize sales), and the app only requests order read permission."
+        "release_notes": "1.1.3: sales reports now come from Haravan Reports (analyze_sales: net sales, profit, quantity and returns grouped by time, product, channel, branch and more), replacing summarize_sales. New list_low_stock and get_inventory_balances tools show products about to run out and stock on hand. The app now also requests the Reports read permission, so existing shops must reconnect."
       }
     }
   },
