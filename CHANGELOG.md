@@ -4,7 +4,8 @@
 
 - New order actions: `preview_confirm_orders`, `preview_close_orders`, `preview_reopen_orders`, `preview_cancel_orders`, `preview_add_order_tags` and `preview_remove_order_tags`, up to 20 orders per call.
 - Each action shows a confirmation card; the change is applied only when the user presses Confirm on the card, never by the model. Cancelling sends no refund amount.
-- The app also requests `com.write_orders`; existing connections must reconnect.
+- New read tools `list_inventory_transfers` (stock transfers between branches, filterable by source or destination branch) and `list_locations` (branches and warehouses, to map names to ids).
+- The app also requests `com.write_orders`, `com.read_inventories` and `com.read_shop`; existing connections must reconnect.
 - Updated the `haravan-api-workflow` skill, README, manifest descriptions and OpenAI review test cases.
 
 ## 1.1.3

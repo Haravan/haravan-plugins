@@ -8,11 +8,11 @@
       "interface": {
         "displayName": "Haravan",
         "shortDescription": "Sales and stock insights from Haravan",
-        "longDescription": "Haravan for ChatGPT helps authorized merchants understand sales and stock and manage orders in their connected shop. Ask for net sales, profit or quantity sold over a period, compare this week with the previous week, see a day-by-day trend, break sales down by channel, product, branch or province, find orders created yesterday that are still unfulfilled, see which products are about to run out, or check stock on hand by branch. Sales and stock figures come from Haravan Reports; order lists come from the shop's orders. Reports state the requested date range and the metrics used, and are limited by the shop's permissions and available data. It can also confirm, close, re-open or cancel orders and add or remove order tags: every change is first shown on a confirmation card and runs only after the merchant presses Confirm. It does not create orders, issue refunds, edit products or adjust stock directly.",
+        "longDescription": "Haravan for ChatGPT helps authorized merchants understand sales and stock and manage orders in their connected shop. Ask for net sales, profit or quantity sold over a period, compare this week with the previous week, see a day-by-day trend, break sales down by channel, product, branch or province, find orders created yesterday that are still unfulfilled, see which products are about to run out, check stock on hand by branch, or review stock transfers between branches. Sales and stock figures come from Haravan Reports; order lists come from the shop's orders. Reports state the requested date range and the metrics used, and are limited by the shop's permissions and available data. It can also confirm, close, re-open or cancel orders and add or remove order tags: every change is first shown on a confirmation card and runs only after the merchant presses Confirm. It does not create orders, issue refunds, edit products or adjust stock directly.",
         "developerName": "Haravan",
         "category": "Business & Operations",
         "capabilities": [
-          "Read connected order, sales and inventory data",
+          "Read connected order, sales, inventory, stock transfer and branch data",
           "Summarize sales performance, fulfillment and stock levels",
           "Confirm, close, re-open, cancel and tag orders after the merchant confirms"
         ],
@@ -70,6 +70,12 @@
               "expected_behavior": "The assistant calls get_inventory_balances with dimensions LocId and metrics QtyOnHand, QtyAvailable and TotalCostAmount, and reports one row per branch, requesting further pages while has_more is true."
             },
             {
+              "description": "List stock transfers received at a named branch.",
+              "prompt": "Show the stock transfers sent to my Hà Nội branch, with status and quantity.",
+              "tools_triggered": "list_locations, list_inventory_transfers",
+              "expected_behavior": "The assistant calls list_locations to find the id of the Hà Nội branch, then calls list_inventory_transfers with to_location_id set to that id, requesting further pages while has_more is true. It reports each transfer's number, source branch name, status, reason and quantity, and does not change stock."
+            },
+            {
               "description": "Tag a set of orders after the merchant confirms on the card.",
               "prompt": "Add the tag “urgent” to every order created yesterday that is still unfulfilled.",
               "tools_triggered": "search_orders, preview_add_order_tags",
@@ -103,7 +109,7 @@
         "countries": [
           "VN"
         ],
-        "release_notes": "1.1.4: the plugin can now confirm, close, re-open and cancel orders and add or remove order tags, for up to 20 orders at a time. Each change is shown on a confirmation card and applied only after the merchant presses Confirm. The app now also requests the order write permission, so existing shops must reconnect."
+        "release_notes": "1.1.4: the plugin can now confirm, close, re-open and cancel orders and add or remove order tags, for up to 20 orders at a time. Each change is shown on a confirmation card and applied only after the merchant presses Confirm. New list_inventory_transfers and list_locations tools show stock transfers between branches and the shop's branches. The app now also requests the order write, inventory read and shop read permissions, so existing shops must reconnect."
       }
     }
   },

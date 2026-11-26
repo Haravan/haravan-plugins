@@ -31,8 +31,8 @@ The plugin turns Haravan shop data into sales and profit reports, channel and pr
 
 ## What you get
 
-- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): read tools `search_orders`, `get_order`, `analyze_sales`, `list_low_stock`, `get_inventory_balances`, and order actions `preview_confirm_orders`, `preview_close_orders`, `preview_reopen_orders`, `preview_cancel_orders`, `preview_add_order_tags`, `preview_remove_order_tags` (each shows a confirmation card; the change is applied only from the card)
-- **`haravan-api-workflow` skill**: guides the agent through sales and stock reports, order lists, order actions, pagination and timezones
+- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): read tools `search_orders`, `get_order`, `analyze_sales`, `list_low_stock`, `get_inventory_balances`, `list_inventory_transfers`, `list_locations`, and order actions `preview_confirm_orders`, `preview_close_orders`, `preview_reopen_orders`, `preview_cancel_orders`, `preview_add_order_tags`, `preview_remove_order_tags` (each shows a confirmation card; the change is applied only from the card)
+- **`haravan-api-workflow` skill**: guides the agent through sales and stock reports, order lists, stock transfers, order actions, pagination and timezones
 
 ## Repository layout
 
