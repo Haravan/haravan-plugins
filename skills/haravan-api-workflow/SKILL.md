@@ -1,12 +1,14 @@
 ---
 name: haravan-api-workflow
-description: Use when an authorized merchant asks for sales or profit reports, weekly comparisons, daily trends, channel or product breakdowns, order lists, order details, low stock or inventory levels from a connected Haravan shop. Read data with the search_orders, get_order, analyze_sales, list_low_stock and get_inventory_balances tools.
+description: Use when an authorized merchant asks for sales or profit reports, weekly comparisons, daily trends, channel or product breakdowns, order lists, order details, low stock or inventory levels from a connected Haravan shop, or wants to confirm, close, re-open, cancel or tag orders. Read data with search_orders, get_order, analyze_sales, list_low_stock and get_inventory_balances; change orders only through the preview_* order action tools.
 ---
 
-# Read sales, orders and stock from a connected Haravan shop
+# Read sales, orders and stock and act on orders in a connected Haravan shop
 
-This release is read-only. For requests to create, edit, cancel, refund, tag,
-restock or delete shop data, explain the limitation without calling tools.
+The only changes this release can make are confirming, closing, re-opening and
+cancelling orders and adding or removing order tags, each after the user
+confirms on a card. For requests to create orders, refund, edit products, adjust
+stock or delete shop data, explain the limitation without calling tools.
 Customer and discount records are outside this release's scope. Follow the
 user's requested period and report; do not retrieve unrelated data.
 
@@ -18,6 +20,7 @@ user's requested period and report; do not retrieve unrelated data.
 - `search_orders`: list orders filtered by creation or update time, order status, payment status (`financial_status`) or shipping status (`fulfillment_status`). Page 1 returns `total`.
 - `get_order`: full details of one order by its API `id` from a search result (not the `#1001` order number).
 - `get_connection_status`: which shop is connected and whether it must be reconnected.
+- `preview_confirm_orders`, `preview_close_orders`, `preview_reopen_orders`, `preview_cancel_orders` (needs `reason`: `customer`, `inventory`, `fraud`, `declined` or `other`; optional `note`, `restock`, `email`), `preview_add_order_tags`, `preview_remove_order_tags` (need `tags`, comma-separated): take 1–20 `order_ids` and only show a confirmation card. Nothing changes until the user presses Confirm on the card, which applies the change itself.
 
 ## Workflow
 
@@ -28,6 +31,7 @@ user's requested period and report; do not retrieve unrelated data.
 5. For order lists, call `search_orders` with the matching filters. Call `get_order` only when the user needs one order's items, addresses, payments, fulfillments or refunds.
 6. Request the next page while `has_more` is true before claiming a complete list or ranking; otherwise say the result is partial.
 7. State the date range, time zone and the metric names used.
+8. To change orders, find their API ids with `search_orders`, then call the matching `preview_*` tool once with every order the user named. Ask for the cancel reason if the user gave none. Do not say the change is done until the card reports Confirm; if the user asks again without a card result, check with `get_order`.
 
 ## Stop conditions
 
