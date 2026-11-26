@@ -1,7 +1,7 @@
 {
   "name": "haravan",
   "version": "1.1.4",
-  "description": "Turn Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries, and confirm, close, cancel or tag orders after you approve each change.",
+  "description": "Turn Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries, and confirm, close, tag, assign or add notes to orders after you approve each change.",
   "mcpServers": {
     "haravan": { "httpUrl": "https://mcp-plugins.haravan.app/mcp" }
   }

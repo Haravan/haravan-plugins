@@ -2,19 +2,19 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "haravan",
   "version": "1.1.4",
-  "description": "Turn Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries, and confirm, close, cancel or tag orders after you approve each change.",
+  "description": "Turn Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries, and confirm, close, tag, assign or add notes to orders after you approve each change.",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Haravan",
         "shortDescription": "Sales and stock insights from Haravan",
-        "longDescription": "Haravan for ChatGPT helps authorized merchants understand sales and stock and manage orders in their connected shop. Ask for net sales, profit or quantity sold over a period, compare this week with the previous week, see a day-by-day trend, break sales down by channel, product, branch or province, find orders created yesterday that are still unfulfilled, see which products are about to run out, check stock on hand by branch, or review stock transfers between branches. Sales and stock figures come from Haravan Reports; order lists come from the shop's orders. Reports state the requested date range and the metrics used, and are limited by the shop's permissions and available data. It can also confirm, close, re-open or cancel orders and add or remove order tags: every change is first shown on a confirmation card and runs only after the merchant presses Confirm. It does not create orders, issue refunds, edit products or adjust stock directly.",
+        "longDescription": "Haravan for ChatGPT helps authorized merchants understand sales and stock and manage orders in their connected shop. Ask for net sales, profit or quantity sold over a period, compare this week with the previous week, see a day-by-day trend, break sales down by channel, product, branch or province, find orders created yesterday that are still unfulfilled, see which products are about to run out, check stock on hand by branch, or review stock transfers between branches. Sales and stock figures come from Haravan Reports; order lists come from the shop's orders. Reports state the requested date range and the metrics used, and are limited by the shop's permissions and available data. It can also confirm, close or re-open orders, add or remove order tags, assign the staff member who handles orders, or add to an order's note: every change is first shown on a confirmation card and runs only after the merchant presses Confirm. It does not create or cancel orders, issue refunds, edit products or adjust stock.",
         "developerName": "Haravan",
         "category": "Business & Operations",
         "capabilities": [
-          "Read connected order, sales, inventory, stock transfer and branch data",
+          "Read connected order, sales, inventory, stock transfer, branch and staff data",
           "Summarize sales performance, fulfillment and stock levels",
-          "Confirm, close, re-open, cancel and tag orders after the merchant confirms"
+          "Confirm, close, re-open, tag, assign and annotate orders after the merchant confirms"
         ],
         "websiteURL": "https://www.haravan.com/",
         "supportURL": "https://support.haravan.com/",
@@ -30,7 +30,7 @@
       },
       "review": {
         "commerce": true,
-        "commerce_description": "This plugin is for merchants managing their own Haravan shops. It reads order, sales report and inventory data. Its only write actions are confirming, closing, re-opening and cancelling orders and adding or removing order tags; each one is shown on a confirmation card and applied only after the merchant presses Confirm on that card. Cancellation sends no refund amount. It does not create orders, issue refunds, edit products, customers or discounts, or adjust stock other than restocking a cancelled order's items when asked.",
+        "commerce_description": "This plugin is for merchants managing their own Haravan shops. It reads order, sales report, inventory, branch and staff data. Its only write actions are confirming, closing and re-opening orders, adding or removing order tags, assigning the staff member who handles orders and appending to an order's note; each one is shown on a confirmation card and applied only after the merchant presses Confirm on that card. It does not create or cancel orders, issue refunds, edit products, customers or discounts, or adjust stock.",
         "test_cases": {
           "positive": [
             {
@@ -82,13 +82,17 @@
               "expected_behavior": "The assistant calls search_orders for yesterday's unfulfilled orders, then calls preview_add_order_tags once with all their ids and tags \"urgent\". A confirmation card lists the orders and the tag. The assistant says nothing has changed until the merchant presses Confirm; only the card calls add_order_tags, and the assistant then reports the result per order."
             },
             {
-              "description": "Cancel an order with a reason after the merchant confirms on the card.",
-              "prompt": "Cancel my most recent order because the customer changed their mind, and put the items back in stock.",
-              "tools_triggered": "search_orders, preview_cancel_orders",
-              "expected_behavior": "The assistant finds the latest order with search_orders and calls preview_cancel_orders with its id, reason customer and restock true. It does not claim the order is cancelled until the card reports Confirm, and it does not send a refund amount."
+              "description": "Add a note to an order after the merchant confirms on the card.",
+              "prompt": "Add the note “Customer asked for delivery after 5pm” to my most recent order.",
+              "tools_triggered": "search_orders, preview_add_order_note",
+              "expected_behavior": "The assistant finds the latest order with search_orders and calls preview_add_order_note with its id and the note text. The card shows the current note and the text to add. The assistant does not claim the note was added until the card reports Confirm, and the existing note is kept."
             }
           ],
           "negative": [
+            {
+              "description": "Cancelling orders is outside the plugin's scope; the assistant should explain this without calling a write tool.",
+              "prompt": "Cancel my last order because the customer changed their mind."
+            },
             {
               "description": "Refunds are outside the plugin's scope; the assistant should explain this without invoking tools.",
               "prompt": "Refund 200,000đ to the customer of my last order."
@@ -109,7 +113,7 @@
         "countries": [
           "VN"
         ],
-        "release_notes": "1.1.4: the plugin can now confirm, close, re-open and cancel orders and add or remove order tags, for up to 20 orders at a time. Each change is shown on a confirmation card and applied only after the merchant presses Confirm. New list_inventory_transfers and list_locations tools show stock transfers between branches and the shop's branches. The app now also requests the order write, inventory read and shop read permissions, so existing shops must reconnect."
+        "release_notes": "1.1.4: the plugin can now confirm, close and re-open orders, add or remove order tags, assign the staff member who handles orders and add to an order's note, for up to 20 orders at a time. Each change is shown on a confirmation card and applied only after the merchant presses Confirm. New list_inventory_transfers, list_locations and list_staff tools show stock transfers between branches, the shop's branches and its staff. The app now also requests the order write, inventory read and shop read permissions, so existing shops must reconnect."
       }
     }
   },
