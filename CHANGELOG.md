@@ -1,5 +1,13 @@
 # haravan
 
+## 1.1.4
+
+- New order actions: `preview_confirm_orders`, `preview_close_orders`, `preview_reopen_orders`, `preview_add_order_tags`, `preview_remove_order_tags`, `preview_assign_orders`, `preview_add_order_note`, up to 20 orders per call. Cancelling orders is not offered.
+- Each action shows a confirmation card; the change is applied only when the user presses Confirm on the card, never by the model. Adding a note appends to the existing note instead of replacing it.
+- New read tools `list_inventory_transfers` (stock transfers between branches, filterable by source or destination branch) `list_locations` (branches and warehouses, to map names to ids) and `list_staff` (staff accounts for assigning orders; Haravan Plus shops only).
+- The app also requests `com.write_orders`, `com.read_inventories` and `com.read_shop`; existing connections must reconnect.
+- Updated the `haravan-api-workflow` skill, README, manifest descriptions and OpenAI review test cases.
+
 ## 1.1.3
 
 - Sales figures now come from Haravan Reports: `analyze_sales` (net sales, profit, quantity, returns, grouped by up to 3 dimensions) replaces `summarize_sales`.

@@ -2,7 +2,7 @@
 
 Connect your AI tools to your Haravan shop.
 
-The plugin turns Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries. It is read-only: it does not create or change orders, products or stock.
+The plugin turns Haravan shop data into sales and profit reports, channel and product breakdowns, order lists, and low-stock and inventory summaries. It can also confirm, close or re-open orders, add or remove order tags, assign the staff member who handles orders, or add to an order's note; every change is shown on a confirmation card and runs only after you press Confirm. It does not create or cancel orders, issue refunds or edit products.
 
 ## Install
 
@@ -31,8 +31,8 @@ The plugin turns Haravan shop data into sales and profit reports, channel and pr
 
 ## What you get
 
-- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): read-only tools: `search_orders`, `get_order`, `analyze_sales`, `list_low_stock`, `get_inventory_balances`
-- **`haravan-api-workflow` skill**: guides the agent through sales and stock reports, order lists, pagination and timezones
+- **Haravan MCP server** (`https://mcp-plugins.haravan.app/mcp`): read tools `search_orders`, `get_order`, `analyze_sales`, `list_low_stock`, `get_inventory_balances`, `list_inventory_transfers`, `list_locations`, `list_staff`, and order actions `preview_confirm_orders`, `preview_close_orders`, `preview_reopen_orders`, `preview_add_order_tags`, `preview_remove_order_tags`, `preview_assign_orders`, `preview_add_order_note` (each shows a confirmation card; the change is applied only from the card)
+- **`haravan-api-workflow` skill**: guides the agent through sales and stock reports, order lists, stock transfers, order actions, pagination and timezones
 
 ## Repository layout
 
